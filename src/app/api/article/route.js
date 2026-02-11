@@ -4,8 +4,8 @@ export async function GET() {
 
     const res = await fetch(`${API_URL}blogs`, {
         headers: {
-            Authorization: `Bearer ${API_KEY}`
-        }
+            "X-MICROCMS-API-KEY": API_KEY
+        },
     });
 
     return Response.json(await res.json());

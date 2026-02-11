@@ -7,7 +7,8 @@ export default async function Page() {
   const result = await fetch(`${API_URL}blogs?limit=100`, {
     headers: {
         "X-MICROCMS-API-KEY": API_KEY
-      }
+      },
+    next: { revalidate: 10, tags: ['blog'] },
   }).then(res => res.json());
   console.log(result.contents[1].eyecatch);
   return (
