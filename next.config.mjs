@@ -2,6 +2,16 @@
 const nextConfig = {
   /* config options here */
   reactCompiler: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.microcms-assets.io",
+      },
+    ],
+  },
+
+
 };
 
 export default nextConfig;
