@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { draftMode } from "next/headers";
+
+import PreviewButton from "../components/button";
 const API_URL = process.env.API_URL;
 const API_KEY = process.env.API_KEY;
 
@@ -42,9 +44,7 @@ export default async function Page({ params, searchParams }) {
   console.log(result);
   return (
     <>
-      {/* <button onClick={async() => {
-        await fetch('api/exit_draft?redirect=/articles/');
-      }}></button> */}
+      {isDraft && <PreviewButton />}
       <h1>{result.title}</h1>
       {result.eyecatch && (
         <Image
