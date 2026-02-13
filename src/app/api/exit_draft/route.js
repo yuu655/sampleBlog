@@ -5,8 +5,11 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const redirectTo = searchParams.get('redirect') ?? '/';
 
+  
   const dm = await draftMode();
   dm.disable();
 
-  return redirect(redirectTo);
+  console.log(redirectTo);
+
+  return new Response(null, {status: 200});
 }

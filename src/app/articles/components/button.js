@@ -1,8 +1,10 @@
 "use client";
 
-export default function PreviewButton() {
-  const endPreview = async () => {
-    await fetch('/api/exit-draft?redirect=/articles/');
-  }
-  return (<button onClick={endPreview}>Previewを終了</button>);
+export default function ExitButton({ redirectTo = '/' }) {
+  const exit = async () => {
+    await fetch(`/api/exit_draft?redirect=${redirectTo}`);
+    window.location.href = redirectTo;
+  };
+
+  return <button onClick={exit}>プレビュー終了</button>;
 }
