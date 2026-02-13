@@ -4,9 +4,9 @@ import { redirect } from 'next/navigation';
 const PREVIEW_SECRET = process.env.MICROCMS_PREVIEW_SECRET;
 
 export async function GET(request) {
-  const { params, searchParams } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
 
-  const slug = searchParams.get('CONTENT_ID');
+  const slug = searchParams.get('slug');
   const draftKey = searchParams.get('draftKey');
   const secret = searchParams.get('secret');
 
