@@ -16,23 +16,25 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function Page({ params }) {
-  const { id } = params;
-  const isDraft = (await draftMode()).isEnabled;
-  const draftKey = searchParams.draftKey;
+export default async function Page({ params, searchParams }) {
+  const { id } = await params;
+  const { draftKey } = await searchParams; // searchParams も await が必要
 
-  const endpoint = new URL(
-    `${API_URL}blog/${id}`
-  );
+  // 2. draftMode() も await が必要
+  const draft = await draftMode();
+  const isDraft = draft.isEnabled;
 
-  // draftMode 中だけ下書きを取得
+  const endpoint = new URL(`${API_URL}blogs/${id}`);
+
+  // 3. draftKey が存在し、かつプレビューモードの時だけクエリを付与
   if (isDraft && draftKey) {
     endpoint.searchParams.set('draftKey', draftKey);
   }
 
+  console.log(endpoint.toString());
 
   const result = await fetch(endpoint, {
-    next: { revalidate: 10 },
+    next: { revalidate: 10, tags: ['blog'] },
     headers: {
         "X-MICROCMS-API-KEY": API_KEY
       }
@@ -40,9 +42,9 @@ export default async function Page({ params }) {
   // console.log(result);
   return (
     <>
-      <button onClick={async() => {
+      {/* <button onClick={async() => {
         await fetch('api/exit_draft?redirect=/articles/');
-      }}></button>
+      }}></button> */}
       <h1>{result.title}</h1>
       {result.eyecatch && (
         <Image
@@ -52,9 +54,8 @@ export default async function Page({ params }) {
           height={result.eyecatch.height}
         />
       )}
-      <div
-        dangerouslySetInnerHTML={{ __html: result.content }}
-      />
+      <div dangerouslySetInnerHTML={{ __html: result.content }} />
+      
     </>
   );
 }
