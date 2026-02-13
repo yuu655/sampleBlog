@@ -46,5 +46,5 @@ export async function GET(request) {
   }
 
   // プレビュー対象ページへ
-  return redirect(`/blog/${slug}?draftKey=${draftKey}`);
+  return redirect(`/articles/${slug}?draftKey=${draftKey}`);
 }

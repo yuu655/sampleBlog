@@ -33,13 +33,13 @@ export default async function Page({ params, searchParams }) {
 
   console.log(endpoint.toString());
 
-  const result = await fetch(endpoint, {
+  const result = await fetch(endpoint.toString(), {
     next: { revalidate: 10, tags: ['blog'] },
     headers: {
         "X-MICROCMS-API-KEY": API_KEY
       }
   }).then(res => res.json());
-  // console.log(result);
+  console.log(result);
   return (
     <>
       {/* <button onClick={async() => {
