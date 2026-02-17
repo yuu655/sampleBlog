@@ -23,9 +23,9 @@ export async function generateMetadata({ params }) {
 
   return {
     title: `${result.title} | サービス名`,
-    description: post.excerpt,
+    description: result.excerpt,
     openGraph: {
-      images: [post.eyecatch.url],
+      images: [result.eyecatch.url],
     },
   };
 }

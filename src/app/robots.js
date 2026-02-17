@@ -5,7 +5,7 @@ export default function robots() {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: [], // クロール拒否するパス
+      disallow: ["/admin"], // クロール拒否するパス
     },
     sitemap: "https://sampleblog-iota.vercel.app",
   };
