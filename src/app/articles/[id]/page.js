@@ -9,10 +9,10 @@ const API_KEY = process.env.API_KEY;
 export async function generateStaticParams() {
   const result = await fetch(`${API_URL}blogs?limit=10`, {
     headers: {
-        "X-MICROCMS-API-KEY": API_KEY
-      },
-    next: { revalidate: 10, tags: ['blog'] },
-  }).then(res => res.json());
+      "X-MICROCMS-API-KEY": API_KEY,
+    },
+    next: { revalidate: 10, tags: ["blog"] },
+  }).then((res) => res.json());
 
   return result.contents.map((article) => ({
     id: article.id,
@@ -31,21 +31,22 @@ export default async function Page({ params, searchParams }) {
 
   // 3. draftKey が存在し、かつプレビューモードの時だけクエリを付与
   if (isDraft && draftKey) {
-    endpoint.searchParams.set('draftKey', draftKey);
+    endpoint.searchParams.set("draftKey", draftKey);
   }
 
   console.log(endpoint.toString());
 
   const result = await fetch(endpoint.toString(), {
-    next: { revalidate: 10, tags: ['blog'] },
+    next: { revalidate: 10, tags: ["blog"] },
     headers: {
-        "X-MICROCMS-API-KEY": API_KEY
-      }
-  }).then(res => res.json());
+      "X-MICROCMS-API-KEY": API_KEY,
+    },
+  }).then((res) => res.json());
   console.log(result);
   return (
-    <>
+    <div className="bg-white min-h-screen">
       <Blog isDraft={isDraft} result={result} />
-    </>
+      
+    </div>
   );
 }

@@ -14,10 +14,7 @@ export async function POST(request) {
 
   try {
     // 3. microCMSからの通知を受け取ってタグを再検証
-    // ここでは一律で 'blog' タグを対象にします
     revalidateTag(tag);
-
-    console.log('Revalidation triggered for tag: blog');
     
     return NextResponse.json({ 
       revalidated: true, 
