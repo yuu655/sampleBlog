@@ -5,7 +5,6 @@ const API_KEY = process.env.API_KEY;
 import ArticleList from "./components/articleList";
 
 import { Calendar, Tag, ArrowRight } from "lucide-react";
-import Article from "@/components/article";
 
 export default async function Articles() {
   const articles = await fetch(`${API_URL}blogs?limit=100`, {

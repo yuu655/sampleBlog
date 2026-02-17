@@ -6,6 +6,30 @@ import ExitButton from "../components/button";
 const API_URL = process.env.API_URL;
 const API_KEY = process.env.API_KEY;
 
+// async function getPost(slug) {
+//   const res = await fetch(`https://api.example.com/posts/${slug}`);
+//   return res.json();
+// }
+
+// 2. メタデータを動的に生成
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  const result = await fetch(`${API_URL}blogs/${id}`, {
+    next: { revalidate: 10, tags: ["blog"] },
+    headers: {
+      "X-MICROCMS-API-KEY": API_KEY,
+    },
+  }).then((res) => res.json());
+
+  return {
+    title: `${result.title} | サービス名`,
+    description: post.excerpt,
+    openGraph: {
+      images: [post.eyecatch.url],
+    },
+  };
+}
+
 export async function generateStaticParams() {
   const result = await fetch(`${API_URL}blogs?limit=10`, {
     headers: {
@@ -34,7 +58,7 @@ export default async function Page({ params, searchParams }) {
     endpoint.searchParams.set("draftKey", draftKey);
   }
 
-  console.log(endpoint.toString());
+  // console.log(endpoint.toString());
 
   const result = await fetch(endpoint.toString(), {
     next: { revalidate: 10, tags: ["blog"] },
@@ -42,7 +66,7 @@ export default async function Page({ params, searchParams }) {
       "X-MICROCMS-API-KEY": API_KEY,
     },
   }).then((res) => res.json());
-  console.log(result);
+  // console.log(result);
   return (
     <div className="bg-white min-h-screen">
       <Blog isDraft={isDraft} result={result} />
