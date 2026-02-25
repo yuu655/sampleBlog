@@ -64,7 +64,7 @@ export default function AddIcon({ format, uid, onUpload }) {
         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
         placeholder="山田 太郎"
       /> */}
-      <label htmlFor="icon">アイコンを変更する</label>
+      <label onClick="icon">アイコンを変更する</label>
       <input
         style={{
           visibility: "hidden",
