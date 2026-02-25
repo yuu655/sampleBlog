@@ -11,7 +11,7 @@ export default async function Articles() {
     },
     next: { revalidate: 10, tags: ["blog"] },
   }).then((res) => res.json());
-  console.log(result.contents);
+  // console.log(result.contents);
   return (
     <div className="bg-white">
       <div className="max-w-300 mx-auto px-4 pt-30 pb-20 flex items-center flex-col">

@@ -11,7 +11,7 @@ export default async function Mentors() {
     },
     next: { revalidate: 10, tags: ["mentor"] },
   }).then((res) => res.json());
-  console.log(result.contents);
+  // console.log(result.contents);
   return (
     <div className="bg-gray-50">
       <div className="max-w-300 mx-auto px-6 pt-30 pb-20 flex items-center flex-col">
