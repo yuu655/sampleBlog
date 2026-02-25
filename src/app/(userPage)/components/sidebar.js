@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { Calendar, MessageCircle, User, Settings } from "lucide-react";
 
-import Icon from "../components/profile/icon";
+import Icon from "./profile/icon";
 
 export default function Sidebar({ profile, meetings, isMentor, side, setSide }) {
   const baseStyle =
