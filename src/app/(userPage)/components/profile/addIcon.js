@@ -64,7 +64,7 @@ export default function AddIcon({ format, uid, onUpload }) {
         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
         placeholder="山田 太郎"
       /> */}
-      <label onClick="icon">アイコンを変更する</label>
+      <label htmlFor="icon">アイコンを変更する</label>
       <input
         style={{
           visibility: "hidden",
@@ -76,7 +76,7 @@ export default function AddIcon({ format, uid, onUpload }) {
         onChange={handleFileChange}
         disabled={uploading}
       />
-      <button formAction={uploadAvatar}>この画像で確定</button>
+      <button onClick={uploadAvatar}>この画像で確定</button>
     </form>
   );
 }
