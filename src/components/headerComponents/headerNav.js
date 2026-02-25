@@ -19,7 +19,7 @@ export default function HeaderNav({ nav_list }){
             {/* <li><button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">予約</button></li> */}
             <li>
               <Button className="bg-blue-500" asChild>
-                <Link className="text-sm" href="/">ログイン</Link>
+                <Link className="text-sm" href="/login">ログイン</Link>
               </Button>
             </li>
           </ul>

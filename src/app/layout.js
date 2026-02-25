@@ -3,6 +3,7 @@ import "./globals.css";
 
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import { Toaster } from "@/components/ui/sonner"
 
 
 // import { SpeedInsights } from "@vercel/speed-insights/next"
@@ -55,9 +56,8 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header propClassName="bg-white shadow-md relative z-0" />
+        <Toaster />
         {children}
-        <Footer />
       </body>
     </html>
   );
