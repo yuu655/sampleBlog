@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { submitMentor, submitUser } from "./actions";
 
-import SetupMentor from "../components/setup/setupMentor";
-import SetupUser from "../components/setup/setupUser";
+import SetupMentor from "../../../components/role/setup/setupMentor";
+import SetupUser from "../../../components/role/setup/setupUser";
 
 export default function setAccount() {
   const [role, setRole] = useState("user");

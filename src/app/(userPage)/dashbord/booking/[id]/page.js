@@ -1,6 +1,6 @@
 "use client";
 
-import Booking from "@/app/(userPage)/components/booking";
+import Booking from "@/components/role/booking";
 import { use } from "react";
 import { submitBooking } from "./actions";
 export default function BookingPage({ params }) {

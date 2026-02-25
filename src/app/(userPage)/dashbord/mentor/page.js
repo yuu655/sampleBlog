@@ -1,5 +1,5 @@
 "use server";
-import DashbordComponent from "../../components/dashbordComponent";
+import DashbordComponent from "../../../../components/role/dashbordComponent";
 
 import { createClient } from "@/lib/supabase/server";
 
