@@ -5,7 +5,7 @@ import { submitMentor, submitUser } from "./actions";
 import SetupMentor from "../../../components/role/setup/setupMentor";
 import SetupUser from "../../../components/role/setup/setupUser";
 
-export default function setAccount() {
+export default function SetAccount() {
   const [role, setRole] = useState("user");
   return (
     <div className="bg-white min-h-screen">

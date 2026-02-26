@@ -1,16 +1,22 @@
 "use client";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
+import AvatarUpload from "./AvatarUpload";
 
 import Image from "next/image";
 
-export default function AddIcon({ format, uid, onUpload }) {
+const supabase = createClient();
+export default function AddIcon({ format, uid, onUpload, profile }) {
   const [uploading, setUploading] = useState(false);
   const [inputFilesPath, setInputFilesPath] = useState(null);
   const [prevFilesPath, setPrevFilesPath] = useState(null);
   const [inputFiles, setInputFiles] = useState(null);
-
-  const supabase = createClient();
+  const [previewUrl, setPreviewUrl] = useState(
+    profile.icon
+      ? supabase.storage.from("avatars").getPublicUrl(profile.icon).data
+          .publicUrl
+      : null,
+  );
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
@@ -19,12 +25,14 @@ export default function AddIcon({ format, uid, onUpload }) {
       const filePath = `${format}/${uid}/${Math.random()}.${fileExt}`;
       setInputFilesPath(filePath);
       setInputFiles(file);
+      setPreviewUrl(URL.createObjectURL(file));
     }
   };
 
   const deleteAvatar = async (path) => {
-    const { error } = await supabase.storage.from("avatars").remove([path]); // 配列で渡す必要がある点に注意！
-
+    console.log("削除対象のパス:", path); // ← 追加
+    const { data, error } = await supabase.storage.from("avatars").remove([path]); // 配列で渡す必要がある点に注意！
+    console.log("削除結果:", data, error); // ← 追加
     if (error) console.error("削除失敗:", error.message);
   };
 
@@ -44,39 +52,22 @@ export default function AddIcon({ format, uid, onUpload }) {
         throw uploadError;
       }
       onUpload(inputFilesPath);
+      if (prevFilesPath) deleteAvatar(prevFilesPath);
     } catch (error) {
       console.log(error);
       alert("Error uploading avatar!");
     } finally {
       setUploading(false);
-      deleteAvatar(prevFilesPath);
       setPrevFilesPath(inputFilesPath);
     }
   };
   return (
-    <form>
-      {/* <label htmlFor="name">ユーザーネームを変更</label>
-      <input
-        id="name"
-        name="name"
-        type="text"
-        required
-        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-        placeholder="山田 太郎"
-      /> */}
-      <label htmlFor="icon">アイコンを変更する</label>
-      <input
-        style={{
-          visibility: "hidden",
-          position: "absolute",
-        }}
-        type="file"
-        id="icon"
-        accept="image/*"
-        onChange={handleFileChange}
-        disabled={uploading}
-      />
-      <button onClick={uploadAvatar}>この画像で確定</button>
-    </form>
+    <AvatarUpload
+      handleFileChange={handleFileChange}
+      uploadAvatar={uploadAvatar}
+      uploading={uploading}
+      previewUrl={previewUrl}
+      profile={profile}
+    />
   );
 }

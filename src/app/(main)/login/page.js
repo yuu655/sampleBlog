@@ -11,12 +11,6 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGoogleLogin = async () => {
-    //   const [origin, setOrigin] = useState('')
-
-    //   useEffect(() => {
-    //     // ここなら絶対安全！
-    //     setOrigin(window.location.origin)
-    //   }, [])
     const supabase = await createClient();
     await supabase.auth.signInWithOAuth({
       provider: "google",

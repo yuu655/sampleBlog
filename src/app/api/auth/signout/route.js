@@ -2,7 +2,6 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 export async function POST(req) {
-  console.log("aaa")
   const supabase = await createClient();
   // Check if a user's logged in
   const {

@@ -18,4 +18,19 @@ async function updateUserProfile(inputFiles) {
   }
 }
 
-export {updateUserProfile}
+async function updateMentorProfile(inputFiles) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { error } = await supabase
+    .from('mentors')
+    .update({ icon: inputFiles })
+    .eq('id', user.id)
+
+  if (!error) {
+    revalidatePath('/dashboard/mentor') // これで画面が更新される
+  }
+}
+
+export {updateUserProfile, updateMentorProfile}

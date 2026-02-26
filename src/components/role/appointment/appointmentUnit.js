@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Icon from "../profile/icon";
 
+const supabase = createClient();
 export default function AppointmentUnit({ appointment, mentors, isMentor }) {
   const [mentor, setMentor] = useState();
   const [user, setUser] = useState();
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
   useEffect(() => {
     const fetchMentor = async () => {
       setLoading(true);

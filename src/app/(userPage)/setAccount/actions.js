@@ -5,26 +5,31 @@ import { createClient } from "@/lib/supabase/server";
 async function submitUser(formData) {
   const data = {
     name: formData.get("name"),
-    grade: formData.get("grade")
+    grade: formData.get("grade"),
   };
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const { error_update } = await supabase
+  const { error: error_update } = await supabase
     .from("profiles")
     .update({
       role: "user",
     })
     .eq("id", user.id);
-  const { error } = await supabase.from("users").insert([
+  if (error_update) {
+    throw error_update;
+  }
+  const { error: error_insert } = await supabase.from("users").insert([
     {
-    id: user.id,
+      id: user.id,
       name: data.name,
-      grade: data.grade
+      grade: data.grade,
     },
   ]);
-  console.log(error)
+  if (error_insert) {
+    throw error_insert;
+  }
   redirect("/dashbord/user");
 }
 
@@ -40,15 +45,18 @@ async function submitMentor(formData) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const { error_update } = await supabase
+  const { error: error_update } = await supabase
     .from("profiles")
     .update({
       role: "mentor",
     })
     .eq("id", user.id);
-  const { error_insert } = await supabase.from("mentors").insert([
+  if (error_update) {
+    throw error_update;
+  }
+  const { error: error_insert } = await supabase.from("mentors").insert([
     {
-    id: user.id,
+      id: user.id,
       name: data.name,
       university: data.university,
       faculty: data.faculty,
@@ -56,11 +64,9 @@ async function submitMentor(formData) {
       region: data.region,
     },
   ]);
-  console.log(error_update, error_insert)
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-
-  console.log(data);
+  if (error_insert) {
+    throw error_insert;
+  }
   redirect("/dashbord/mentor");
 }
 

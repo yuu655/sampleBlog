@@ -11,5 +11,5 @@ export async function GET(request) {
 
   console.log(redirectTo);
 
-  return new Response(null, {status: 200});
+  redirect(redirectTo);
 }

@@ -7,51 +7,6 @@ import AppointmentUnitPast from "./appointmentUnitPast";
 import Mentors from "../mentors";
 import { createClient } from "@/lib/supabase/client";
 
-// Mock data
-const upcomingAppointments = [
-  {
-    id: 1,
-    mentorName: "田中 太郎",
-    mentorUniversity: "東京大学 工学部",
-    date: "2026年2月20日",
-    time: "19:00 - 19:40",
-    topic: "志望校選びについて",
-    status: "confirmed",
-    meetingLink: "https://zoom.us/j/example1",
-  },
-  {
-    id: 2,
-    mentorName: "佐藤 花子",
-    mentorUniversity: "早稲田大学 政治経済学部",
-    date: "2026年2月25日",
-    time: "20:00 - 20:40",
-    topic: "小論文の書き方",
-    status: "pending",
-    meetingLink: null,
-  },
-];
-
-const pastAppointments = [
-  {
-    id: 3,
-    mentorName: "鈴木 一郎",
-    mentorUniversity: "京都大学 医学部",
-    date: "2026年2月10日",
-    time: "18:00 - 18:40",
-    topic: "医学部受験について",
-    rating: 5,
-  },
-  {
-    id: 4,
-    mentorName: "田中 太郎",
-    mentorUniversity: "東京大学 工学部",
-    date: "2026年2月5日",
-    time: "19:00 - 19:40",
-    topic: "数学の勉強法",
-    rating: 5,
-  },
-];
-
 export default function AppointmentContent({ isActive, mentors, isMentor, meetings }) {
   return (
     <div className="p-6">
@@ -80,7 +35,7 @@ export default function AppointmentContent({ isActive, mentors, isMentor, meetin
       {isActive === "past" && (
         <div className="space-y-4">
           {meetings.past.map((appointment) => (
-            <AppointmentUnitPast key={appointment.id} appointment={appointment} />
+            <AppointmentUnitPast key={appointment.id} appointment={appointment} mentors={mentors} isMentor={isMentor} />
           ))}
         </div>
       )}
