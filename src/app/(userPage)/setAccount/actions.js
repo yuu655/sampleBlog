@@ -30,7 +30,7 @@ async function submitUser(formData) {
   if (error_insert) {
     throw error_insert;
   }
-  redirect("/dashbord/user");
+  redirect("/dashboard/user");
 }
 
 async function submitMentor(formData) {
@@ -67,7 +67,7 @@ async function submitMentor(formData) {
   if (error_insert) {
     throw error_insert;
   }
-  redirect("/dashbord/mentor");
+  redirect("/dashboard/mentor");
 }
 
 export { submitMentor, submitUser };

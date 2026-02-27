@@ -28,7 +28,7 @@ export async function updateSession(request) {
   const { data: { user }, error } = await supabase.auth.getUser()
 
   // 1. 未ログインならログインページへ (チャットや管理画面へのアクセス時)
-  if (!user && (request.nextUrl.pathname.startsWith('/dashbord') || request.nextUrl.pathname.startsWith('/admin') || request.nextUrl.pathname.startsWith('/setAccount'))) {
+  if (!user && (request.nextUrl.pathname.startsWith('/dashboard') || request.nextUrl.pathname.startsWith('/admin') || request.nextUrl.pathname.startsWith('/setAccount'))) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
@@ -38,12 +38,12 @@ export async function updateSession(request) {
       .select('role')
       .eq("id", user?.id)
       .single();
-    if(profile.role === "pending" && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname.startsWith('/dashbord'))){
+    if(profile.role === "pending" && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname.startsWith('/dashboard'))){
       return NextResponse.redirect(new URL('/setAccount', request.url))
-    }else if(profile.role === "user" && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/setAccount' || request.nextUrl.pathname === '/dashbord' || request.nextUrl.pathname === '/dashbord/mentor')){
-      return NextResponse.redirect(new URL('/dashbord/user', request.url))
-    }else if(profile.role === "mentor" && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/setAccount' || request.nextUrl.pathname === '/dashbord' || request.nextUrl.pathname === '/dashbord/user')){
-      return NextResponse.redirect(new URL('/dashbord/mentor', request.url))
+    }else if(profile.role === "user" && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/setAccount' || request.nextUrl.pathname === '/dashboard' || request.nextUrl.pathname === '/dashboard/mentor')){
+      return NextResponse.redirect(new URL('/dashboard/user', request.url))
+    }else if(profile.role === "mentor" && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/setAccount' || request.nextUrl.pathname === '/dashboard' || request.nextUrl.pathname === '/dashboard/user')){
+      return NextResponse.redirect(new URL('/dashboard/mentor', request.url))
     }
   }
   

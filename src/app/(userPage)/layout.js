@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/app/globals.css";
 
-import Header from "@/components/role/header";
+import Header from "@/components/dashboard/header";
 
 // import { SpeedInsights } from "@vercel/speed-insights/next"
 

@@ -1,6 +1,8 @@
 import { Search, MapPin, GraduationCap } from "lucide-react";
 import Image from "next/image";
 
+import Icon from "./dashboard/profile/icon";
+
 export default function Mentor({
   // icon_url,
   // name,
@@ -8,7 +10,7 @@ export default function Mentor({
   // faculty,
   // region,
   // specialties,
-  mentor
+  mentor,
 }) {
   return (
     <>
@@ -36,15 +38,17 @@ export default function Mentor({
         className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-shadow"
       >
         {/* Avatar */}
-        <div className="w-24 h-24 bg-linear-to-br from-gray-300 to-gray-400 rounded-full mx-auto mb-4">
+        {/* <div className="w-24 h-24 bg-linear-to-br from-gray-300 to-gray-400 rounded-full mx-auto mb-4">
           <Image
-          alt="icon"
-          src={mentor.icon.url}
-          width={80}
-          height={80}
-          className="w-24 h-24 mx-auto rounded-full object-cover"
+            alt="icon"
+            src={mentor.icon.url}
+            width={80}
+            height={80}
+            className="w-24 h-24 mx-auto rounded-full object-cover"
           />
-        </div>
+        </div> */}
+        
+        <Icon size={90} url={mentor?.icon} />
 
         {/* Name */}
         <h3 className="text-xl font-bold text-center mb-2">{mentor.name}</h3>
@@ -69,16 +73,18 @@ export default function Mentor({
         </p>
 
         {/* Specialties */}
-        <div className="flex flex-wrap gap-2 justify-center mb-4">
-          {mentor.specialties.map((specialty, index) => (
-            <span
-              key={index}
-              className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
-            >
-              {specialty}
-            </span>
-          ))}
-        </div>
+        {mentor.specialties!==null && (
+          <div className="flex flex-wrap gap-2 justify-center mb-4">
+            {mentor.specialties.map((specialty, index) => (
+              <span
+                key={index}
+                className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
+              >
+                {specialty}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

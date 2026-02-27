@@ -17,7 +17,7 @@ export async function login(formData) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/dashbord/account"); // 成功時はリダイレクト
+  redirect("/dashboard/account"); // 成功時はリダイレクト
 }
 
 export async function signup(formData) {
