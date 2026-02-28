@@ -1,3 +1,5 @@
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse } from 'next/server'
 // proxy.js
 export async function updateSession(request) {
   const pathname = request.nextUrl.pathname;
