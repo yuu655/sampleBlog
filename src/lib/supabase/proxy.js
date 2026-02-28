@@ -35,7 +35,13 @@ export async function updateSession(request) {
 
   // ログイン済みのときだけDBアクセス（1回に統合）
   if (user) {
-    const role = user.user_metadata?.role;
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select('role')
+      .eq("id", user.id)
+      .single();
+
+    const role = profile?.role;
 
     if (role === "pending" && (pathname === '/login' || pathname.startsWith('/dashboard'))) {
       return NextResponse.redirect(new URL('/setAccount', request.url));

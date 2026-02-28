@@ -11,11 +11,6 @@ async function submitUser(formData) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  await supabase.auth.updateUser({
-    data: { role: "user" }, // または "mentor"
-  });
-
   const { error: error_update } = await supabase
     .from("profiles")
     .update({
@@ -50,11 +45,6 @@ async function submitMentor(formData) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  await supabase.auth.updateUser({
-    data: { role: "mentor" }, // または "mentor"
-  });
-
   const { error: error_update } = await supabase
     .from("profiles")
     .update({
