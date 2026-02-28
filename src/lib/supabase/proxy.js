@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
-// proxy.js
+
 export async function updateSession(request) {
   const pathname = request.nextUrl.pathname;
 
@@ -22,9 +22,12 @@ export async function updateSession(request) {
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  // getSession() はCookieを読むだけ = ネットワーク通信なし
+  const { data: { session } } = await supabase.auth.getSession();
+  const user = session?.user;
+  const role = user?.user_metadata?.role;  // JWTから取得
 
-  // 未ログイン → リダイレクト（DBアクセスなし）
+  // 未ログイン → リダイレクト
   if (!user && (
     pathname.startsWith('/dashboard') ||
     pathname.startsWith('/admin') ||
@@ -33,16 +36,7 @@ export async function updateSession(request) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // ログイン済みのときだけDBアクセス（1回に統合）
   if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select('role')
-      .eq("id", user.id)
-      .single();
-
-    const role = profile?.role;
-
     if (role === "pending" && (pathname === '/login' || pathname.startsWith('/dashboard'))) {
       return NextResponse.redirect(new URL('/setAccount', request.url));
     }
@@ -52,7 +46,6 @@ export async function updateSession(request) {
     if (role === "mentor" && (pathname === '/login' || pathname === '/setAccount' || pathname === '/dashboard' || pathname === '/dashboard/user')) {
       return NextResponse.redirect(new URL('/dashboard/mentor', request.url));
     }
-    // /admin チェックも同じprofileを再利用（2回目のDB不要）
     if (pathname.startsWith('/admin') && role !== 'admin') {
       return NextResponse.redirect(new URL('/', request.url));
     }
