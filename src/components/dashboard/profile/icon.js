@@ -3,12 +3,14 @@
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 
-// StorageのURL計算はサーバーでできるのでServerComponentに
 export default function Icon({ size, url }) {
-  const supabase = createClient();
-  const avatarUrl = url
-    ? supabase.storage.from("avatars").getPublicUrl(url).data.publicUrl
-    : "/default.jpg";
+  const isValidUrl = typeof url === "string" && url.length > 0;
+
+  let avatarUrl = "/default.jpg";
+  if (isValidUrl) {
+    const supabase = createClient();
+    avatarUrl = supabase.storage.from("avatars").getPublicUrl(url).data.publicUrl;
+  }
 
   return (
     <div style={{ height: size, width: size }} className="relative mx-auto mb-3">
@@ -17,8 +19,9 @@ export default function Icon({ size, url }) {
         width={size}
         height={size}
         src={avatarUrl}
+        onError={(e) => { e.currentTarget.src = "/default.jpg"; }}
         alt="Avatar"
-        className="rounded-full object-cover border-2 border-gray-200 mx-auto mb-3"
+        className="rounded-full mx-auto mb-3 object-cover"
         style={{ height: size, width: size }}
       />
     </div>
