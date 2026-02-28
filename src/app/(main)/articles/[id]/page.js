@@ -15,7 +15,7 @@ const API_KEY = process.env.API_KEY;
 export async function generateMetadata({ params }) {
   const { id } = await params;
   const result = await fetch(`${API_URL}blogs/${id}`, {
-    next: { revalidate: 10, tags: ["blog"] },
+    next: { revalidate: 3600, tags: ["blog"] },
     headers: {
       "X-MICROCMS-API-KEY": API_KEY,
     },
@@ -35,7 +35,7 @@ export async function generateStaticParams() {
     headers: {
       "X-MICROCMS-API-KEY": API_KEY,
     },
-    next: { revalidate: 10, tags: ["blog"] },
+    next: { revalidate: 3600, tags: ["blog"] },
   }).then((res) => res.json());
 
   return result.contents.map((article) => ({
@@ -61,7 +61,7 @@ export default async function Page({ params, searchParams }) {
   // console.log(endpoint.toString());
 
   const result = await fetch(endpoint.toString(), {
-    next: { revalidate: 10, tags: ["blog"] },
+    next: { revalidate: 3600, tags: ["blog"] },
     headers: {
       "X-MICROCMS-API-KEY": API_KEY,
     },

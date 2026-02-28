@@ -13,7 +13,7 @@ export default async function ArticlesCategory({params}) {
     headers: {
       "X-MICROCMS-API-KEY": API_KEY,
     },
-    next: { revalidate: 10, tags: ["blog"] },
+    next: { revalidate: 3600, tags: ["blog"] },
   }).then((res) => res.json());
   return (
     <ArticleList articles={articles}></ArticleList>

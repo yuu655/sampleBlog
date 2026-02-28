@@ -53,12 +53,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="jp">
-      <SpeedInsights />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Toaster />
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
