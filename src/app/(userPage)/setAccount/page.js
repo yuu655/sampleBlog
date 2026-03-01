@@ -23,8 +23,16 @@ export default function SetAccount() {
       <section className="py-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between">
-            <button onClick={() => setRole("user")}>User</button>
-            <button onClick={() => setRole("mentor")}>Mentor</button>
+            <button className={`py-4 font-medium border-b-2 transition-colors ${
+        isActive === state
+          ? "border-blue-600 text-blue-600"
+          : "border-transparent text-gray-600 hover:text-gray-900"
+      }`} onClick={() => setRole("user")}>User</button>
+            <button className={`py-4 font-medium border-b-2 transition-colors ${
+        isActive === state
+          ? "border-blue-600 text-blue-600"
+          : "border-transparent text-gray-600 hover:text-gray-900"
+      }`} onClick={() => setRole("mentor")}>Mentor</button>
           </div>
           {role === "user" && <SetupUser func={submitUser} />}
 
