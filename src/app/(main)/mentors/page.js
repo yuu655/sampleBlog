@@ -7,10 +7,7 @@ const API_KEY = process.env.API_KEY;
 
 const getMentors = (supabase) => unstable_cache(
   async () => {
-    const supabase = await createClient();
-    const { data: mentors } = await supabase
-      .from("mentors")
-      .select("id, name, university, faculty, icon, specialties, region, bio");
+    const { data: mentors } = await supabase.from("mentors").select("*");
     return mentors ?? [];
   },
   ["mentors-list"],
@@ -29,7 +26,7 @@ export default async function Mentors() {
   // }).then((res) => res.json());
   // console.log(mentors);
   const supabase = await createClient();
-  const mentors = await getMentors(supabase);
+  const mentors = await getMentors(supabase)();
   return (
     <>
       <Mentor mentors={mentors} />
