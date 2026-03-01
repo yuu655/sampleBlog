@@ -14,6 +14,7 @@ export default async function Mentors() {
   //   },
   //   next: { revalidate: 10, tags: ["mentor"] },
   // }).then((res) => res.json());
+  // console.log(mentors);
 
   return (
     <>
