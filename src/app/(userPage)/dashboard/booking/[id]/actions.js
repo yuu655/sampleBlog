@@ -1,19 +1,18 @@
 "use server";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { revalidateTag } from "next/cache";
 
 export const submitBooking = async (mentorId, prevState, formData) => {
   const title = formData.get("title");
   const description = formData.get("description");
 
-  // バリデーション
   if (!title) return { error: "相談内容を選択してください" };
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "ログインが必要です" };
 
-  // ロール確認
   const { data: profile } = await supabase
     .from("profiles")
     .select("role")
@@ -21,7 +20,6 @@ export const submitBooking = async (mentorId, prevState, formData) => {
     .single();
   if (profile?.role !== "user") return { error: "権限がありません" };
 
-  // mentorの存在確認
   const { data: mentor } = await supabase
     .from("mentors")
     .select("id")
@@ -37,6 +35,10 @@ export const submitBooking = async (mentorId, prevState, formData) => {
   });
 
   if (error) return { error: "予約の作成に失敗しました" };
+
+  // userダッシュボードとmentorダッシュボードのキャッシュを破棄
+  revalidateTag(`dashboard-user-${user.id}`);
+  revalidateTag(`dashboard-mentor-${mentorId}`);
 
   redirect("/dashboard/user");
 };

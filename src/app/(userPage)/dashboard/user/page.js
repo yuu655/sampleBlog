@@ -1,29 +1,48 @@
 import UserDashboard from "@/components/dashboard/user/UserDashboard";
 import { createClient } from "@/lib/supabase/server";
+import { unstable_cache } from "next/cache";
 
 export default async function UserPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const [
-    { data: profile },
-    { data: mentors },
-    { data: nextMeetings },
-    { data: pastMeetings },
-  ] = await Promise.all([
-    supabase.from("users").select("*").eq("id", user.id).single(),
-    supabase.from("mentors").select("*"),
-    supabase.from("meetings").select("*").eq("user", user.id).eq("is_finished", false),
-    supabase.from("meetings").select("*").eq("user", user.id).eq("is_finished", true),
-  ]);
+  const getUserDashboardData = unstable_cache(
+    async (userId) => {
+      const [
+        { data: profile },
+        { data: mentors },
+        { data: nextMeetings },
+        { data: pastMeetings },
+      ] = await Promise.all([
+        supabase.from("users").select("*").eq("id", userId).single(),
+        supabase.from("mentors").select("id, name, university, faculty, icon, specialties, region"),
+        supabase.from("meetings").select("*").eq("user", userId).eq("is_finished", false),
+        supabase.from("meetings").select("*").eq("user", userId).eq("is_finished", true),
+      ]);
 
-  const meetings = { next: nextMeetings ?? [], past: pastMeetings ?? [] };
+      return {
+        profile,
+        mentors: mentors ?? [],
+        meetings: {
+          next: nextMeetings ?? [],
+          past: pastMeetings ?? [],
+        },
+      };
+    },
+    [`dashboard-user-${user.id}`],
+    {
+      revalidate: 60, // 1分キャッシュ（meetingsは頻繁に変わりうるので短め）
+      tags: [`dashboard-user-${user.id}`, "meetings"],
+    }
+  );
+
+  const { profile, mentors, meetings } = await getUserDashboardData(user.id);
 
   return (
     <UserDashboard
       profile={profile}
       meetings={meetings}
-      mentors={mentors ?? []}
+      mentors={mentors}
     />
   );
 }

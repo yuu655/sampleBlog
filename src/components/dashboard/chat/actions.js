@@ -1,8 +1,8 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { revalidateTag } from "next/cache";
 
-// 権限確認ヘルパー
 async function getMeetingWithAuth(supabase, meetingId, userId) {
   const { data: meeting } = await supabase
     .from("meetings")
@@ -11,6 +11,12 @@ async function getMeetingWithAuth(supabase, meetingId, userId) {
     .single();
   if (!meeting || (meeting.user !== userId && meeting.mentor !== userId)) return null;
   return meeting;
+}
+
+// 両者のダッシュボードキャッシュを破棄するヘルパー
+function revalidateDashboards(meeting) {
+  revalidateTag(`dashboard-user-${meeting.user}`);
+  revalidateTag(`dashboard-mentor-${meeting.mentor}`);
 }
 
 // 日時確定
@@ -28,10 +34,11 @@ export async function confirmDate(meetingId, date, time) {
     .eq("id", meetingId);
 
   if (error) return { error: "確定に失敗しました" };
+  revalidateDashboards(meeting);
   return { success: true };
 }
 
-// 日時リセット（どちらからでも可能）
+// 日時リセット
 export async function resetDate(meetingId) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -46,6 +53,7 @@ export async function resetDate(meetingId) {
     .eq("id", meetingId);
 
   if (error) return { error: "リセットに失敗しました" };
+  revalidateDashboards(meeting);
   return { success: true };
 }
 
@@ -87,7 +95,7 @@ export async function requestFinish(meetingId) {
   return { success: true };
 }
 
-// ミーティング終了を承認（申請者以外が実行）
+// ミーティング終了を承認
 export async function approveFinish(meetingId) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -96,7 +104,6 @@ export async function approveFinish(meetingId) {
   const meeting = await getMeetingWithAuth(supabase, meetingId, user.id);
   if (!meeting) return { error: "権限がありません" };
 
-  // 自分が申請者だったら承認できない
   if (meeting.finish_requested_by === user.id) return { error: "自分の申請は承認できません" };
 
   const { error } = await supabase
@@ -105,6 +112,7 @@ export async function approveFinish(meetingId) {
     .eq("id", meetingId);
 
   if (error) return { error: "終了に失敗しました" };
+  revalidateDashboards(meeting); // 終了したら過去の相談に移動するのでキャッシュ破棄
   return { success: true };
 }
 
