@@ -5,17 +5,16 @@ import { createClient } from "@/lib/supabase/server";
 const API_URL = process.env.API_URL;
 const API_KEY = process.env.API_KEY;
 
-const getMentors = unstable_cache(
+const getMentors = (supabase) => unstable_cache(
   async () => {
     const supabase = await createClient();
     const { data: mentors } = await supabase
       .from("mentors")
       .select("id, name, university, faculty, icon, specialties, region, bio");
-      // .limit(3) も外れてますがこれは意図的？全件取得でいいですか？
     return mentors ?? [];
   },
   ["mentors-list"],
-  { revalidate: 3600, tags: ["mentors"] }  // 1時間キャッシュ
+  { revalidate: 3600, tags: ["mentors"] }
 );
 
 export default async function Mentors() {
@@ -29,7 +28,8 @@ export default async function Mentors() {
   //   next: { revalidate: 10, tags: ["mentor"] },
   // }).then((res) => res.json());
   // console.log(mentors);
-  const mentors = await getMentors();
+  const supabase = await createClient();
+  const mentors = await getMentors(supabase);
   return (
     <>
       <Mentor mentors={mentors} />

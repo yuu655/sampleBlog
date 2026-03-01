@@ -6,8 +6,9 @@ export default async function MentorPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const getMentorDashboardData = unstable_cache(
-    async (userId) => {
+  // supabaseとuserIdをキャッシュの外で取得してから渡す
+  const getCachedData = (supabase, userId) => unstable_cache(
+    async () => {
       const [
         { data: profile },
         { data: nextMeetings },
@@ -26,21 +27,15 @@ export default async function MentorPage() {
 
       return {
         profile,
-        meetings: {
-          next: nextMeetings ?? [],
-          past: pastMeetings ?? [],
-        },
+        meetings: { next: nextMeetings ?? [], past: pastMeetings ?? [] },
         users: users ?? [],
       };
     },
-    [`dashboard-mentor-${user.id}`],
-    {
-      revalidate: 60,
-      tags: [`dashboard-mentor-${user.id}`, "meetings"],
-    }
+    [`dashboard-mentor-${userId}`],  // userIdは引数から取得
+    { revalidate: 60, tags: [`dashboard-mentor-${userId}`, "meetings"] }
   );
 
-  const { profile, meetings, users } = await getMentorDashboardData(user.id);
+  const { profile, meetings, users } = await getCachedData(supabase, user.id)();
 
   return (
     <MentorDashboard
