@@ -13,11 +13,17 @@ export async function login(formData) {
   const { error } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
-    return { error: "ログインに失敗しました: " + error.message };
+    if (error.message === "Invalid login credentials") {
+      return {
+        error:
+          "メールアドレスまたはパスワードが間違っています。アカウントをお持ちでない場合は新規登録してください。",
+      };
+    }
+    return { error: "ログインに失敗しました" };
   }
 
   revalidatePath("/", "layout");
-  redirect("/dashboard/account"); // 成功時はリダイレクト
+  redirect("/dashboard"); // 成功時はリダイレクト
 }
 
 export async function signup(formData) {
